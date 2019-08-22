@@ -13,6 +13,13 @@ public class Pessoa {
 		this.salario = salario;
 	}
 
+	public Pessoa() {
+	}
+	
+	void modificanome(String nome){
+		
+	}
+
 	public void setNumeroDeFilhos(int num) {
 		this.numeroFilhos = num;
 	}
