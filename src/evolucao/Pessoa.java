@@ -15,9 +15,9 @@ public class Pessoa {
 
 	public Pessoa() {
 	}
-	
-	void modificanome(String nome){
-		
+
+	void modificaNome(String nome) {
+		this.nome = nome;
 	}
 
 	public void setNumeroDeFilhos(int num) {
@@ -55,6 +55,21 @@ public class Pessoa {
 
 	public void setSalario(double salario) {
 		this.salario = salario;
+	}
+
+	private class Mae {
+	}
+
+	public class Pai {
+
+	}
+
+	class Filho {
+
+	}
+
+	class Neto {
+
 	}
 
 }
