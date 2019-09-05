@@ -9,22 +9,16 @@ import java.util.regex.Pattern;
 
 public class CodeReader {
 
-	private  File arquivo;
+	private File arquivo;
 	private int loc;
 	private int qtdMetodos;
 	private int qtdClasses;
 
-	public void main(String[] args) {
-		
-		setArquivo("C:\\Users\\cezar-filho\\workspaces\\ucsal-20192\\codigo-fonte-analise\\src\\evolucao\\Pessoa.java");
-	}
-	
-	public void run(String diretorio	) {
+	public void run(String diretorio) {
 		setArquivo(diretorio);
 		System.out.println("LOC: " + getLoc());
 		System.out.println("METODOS: " + getQtdMetodos());
 		System.out.println("CLASSES:" + getQtdClasses());
-		
 	}
 
 	public void setArquivo(String diretorio) { // contaMetodo e contaClasse consome este método
@@ -33,7 +27,7 @@ public class CodeReader {
 
 	public int getQtdMetodos() { // Conta os metodos do arquivo
 		Pattern pattern = Pattern.compile(
-				"(^.*(public|private|protected|.*))*(int|boolean|byte|double|float|char|long|short|.*([A-z0-9a-z]*[(].*[)]*[{]))");
+				"(^.*(public|private|protected|.*))*(void|int|boolean|byte|double|float|char|long|short|String).*([A-z0-9a-z]*[(].*[)]*[{])");
 		BufferedReader reader;
 		Matcher matcher;
 		String linha;
