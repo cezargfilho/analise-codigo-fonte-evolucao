@@ -1,62 +1,98 @@
 package reader;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CodeReader {
 
-	private BufferedReader codigo = null;
-	private String localPath = "";
-	private Class<?> classe;
+	private  File arquivo;
+	private int loc;
+	private int qtdMetodos;
+	private int qtdClasses;
 
-	public CodeReader(String localPath, Class<?> classe) {
-		super();
-		this.localPath = localPath;
-		this.classe = classe;
+	public void main(String[] args) {
+		
+		setArquivo("C:\\Users\\cezar-filho\\workspaces\\ucsal-20192\\codigo-fonte-analise\\src\\evolucao\\Pessoa.java");
+	}
+	
+	public void run(String diretorio	) {
+		setArquivo(diretorio);
+		System.out.println("LOC: " + getLoc());
+		System.out.println("METODOS: " + getQtdMetodos());
+		System.out.println("CLASSES:" + getQtdClasses());
+		
 	}
 
-	public void run() {
-		try {
-			codigo = new BufferedReader(new FileReader(localPath));// FileReader recebe local
-			readFile();
-		} catch (FileNotFoundException e) {
-			System.err.println("Arquivo nao Encontrado");
-		}
+	public void setArquivo(String diretorio) { // contaMetodo e contaClasse consome este m�todo
+		this.arquivo = new File(diretorio);
 	}
 
-	public void readFile() {
-		int loc = 0;
+	public int getQtdMetodos() { // Conta os metodos do arquivo
+		Pattern pattern = Pattern.compile(
+				"(^.*(public|private|protected|.*))*(int|boolean|byte|double|float|char|long|short|.*([A-z0-9a-z]*[(].*[)]*[{]))");
+		BufferedReader reader;
+		Matcher matcher;
+		String linha;
 		try {
-			while (codigo.ready()) {
-				codigo.readLine();
-				loc++;
+			reader = new BufferedReader(new FileReader(arquivo.getPath()));
+			if (reader.ready()) {
+				while ((linha = reader.readLine()) != null) {
+					matcher = pattern.matcher(linha);
+					if (matcher.find())
+						qtdMetodos++;
+				}
 			}
-
+			reader.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println("O LOC é: " + loc);
-
-		System.out.println("Numero de metodos: " + countMethods(classe));
-		System.out.println("Numero de classes: " + countClasses(classe));
+		return qtdMetodos;
 	}
 
-	public int countMethods(Class<?> obj) {
-		int numeroMetodos = obj.getDeclaredMethods().length;
-		return numeroMetodos;
-	}
-
-	public int countClasses(Class<?> obj) {
-		// Conta as classes do Objeto + a prorpia classe
-		int qtdClasses = (obj.getDeclaredClasses().length) + 1;
+	public int getQtdClasses() { // Conta as classes do arquivo
+		Pattern pattern = Pattern.compile("(.*class) * [A-Z].*[{]");
+		BufferedReader reader;
+		Matcher matcher;
+		String linha;
+		try {
+			reader = new BufferedReader(new FileReader(arquivo.getPath()));
+			if (reader.ready()) {
+				while ((linha = reader.readLine()) != null) {
+					matcher = pattern.matcher(linha);
+					if (matcher.find())
+						qtdClasses++;
+				}
+			}
+			reader.close();
+			return qtdClasses;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		return qtdClasses;
 	}
-	/*
-	 * public void inputPath() { Scanner scan = new Scanner(System.in); try {
-	 * System.out.println("Insira um Caminho Válido"); localPath = scan.next();
-	 * scan.close(); getFileByPath(localPath); } catch (Exception e) {
-	 * e.printStackTrace(); } }
-	 */
+
+	public int getLoc() {
+		Pattern pattern = Pattern.compile("(\\S)"); // regra regex LOC
+		BufferedReader reader;
+		String linha;
+		Matcher matcher;
+		try {
+			reader = new BufferedReader(new FileReader(arquivo.getPath()));
+			while ((linha = reader.readLine()) != null) {
+				matcher = pattern.matcher(linha);
+				if (matcher.find())
+					loc++;
+			}
+			reader.close();
+			return loc;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return loc;
+	}
+
 }
