@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import exportador.Exportador;
+
 public class CodeReader {
 
 	private int loc;
@@ -16,10 +18,12 @@ public class CodeReader {
 	public void run(File diretorio) {
 		// usado para busca em múltiplos diretórios
 		caminhaDiretorios(diretorio);
-		System.out.println("METODOS: " + this.qtdMetodos);
-
+		Exportador exportador = new Exportador();
+		imprime();
+		exportador.gerarCSV(loc, qtdClasses, qtdMetodos);
 		/*
-		 * Usado para busca em um caminho apenas System.out.println("LOC: " +
+		 * Usado para busca em um arquivo apenas 
+		 * System.out.println("LOC: " +
 		 * getLoc(diretorio)); System.out.println("METODOS: " +
 		 * getQtdMetodos(diretorio)); System.out.println("CLASSES:" +
 		 * getQtdClasses(diretorio));
