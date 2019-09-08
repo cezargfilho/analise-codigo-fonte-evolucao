@@ -9,23 +9,25 @@ import java.util.regex.Pattern;
 
 public class CodeReader {
 
-	private File arquivo;
 	private int loc;
 	private int qtdMetodos;
 	private int qtdClasses;
 
-	public void run(String diretorio) {
-		setArquivo(diretorio);
-		System.out.println("LOC: " + getLoc());
-		System.out.println("METODOS: " + getQtdMetodos());
-		System.out.println("CLASSES:" + getQtdClasses());
+	public void run(File diretorio) {
+		// usado para busca em múltiplos diretórios
+		caminhaDiretorios(diretorio);
+		System.out.println("METODOS: " + this.qtdMetodos);
+
+		/*
+		 * Usado para busca em um caminho apenas System.out.println("LOC: " +
+		 * getLoc(diretorio)); System.out.println("METODOS: " +
+		 * getQtdMetodos(diretorio)); System.out.println("CLASSES:" +
+		 * getQtdClasses(diretorio));
+		 */
+
 	}
 
-	public void setArquivo(String diretorio) { // contaMetodo e contaClasse consome este método
-		this.arquivo = new File(diretorio);
-	}
-
-	public int getQtdMetodos() { // Conta os metodos do arquivo
+	public int getQtdMetodos(File arquivo) { // Conta os metodos do arquivo
 		Pattern pattern = Pattern.compile(
 				"(^.*(public|private|protected|.*))*(void|int|boolean|byte|double|float|char|long|short|String).*([A-z0-9a-z]*[(].*[)]*[{])");
 		BufferedReader reader;
@@ -47,7 +49,7 @@ public class CodeReader {
 		return qtdMetodos;
 	}
 
-	public int getQtdClasses() { // Conta as classes do arquivo
+	public int getQtdClasses(File arquivo) { // Conta as classes do arquivo
 		Pattern pattern = Pattern.compile("(.*class) * [A-Z].*[{]");
 		BufferedReader reader;
 		Matcher matcher;
@@ -69,7 +71,7 @@ public class CodeReader {
 		return qtdClasses;
 	}
 
-	public int getLoc() {
+	public int getLoc(File arquivo) {
 		Pattern pattern = Pattern.compile("(\\S)"); // regra regex LOC
 		BufferedReader reader;
 		String linha;
@@ -89,4 +91,25 @@ public class CodeReader {
 		return loc;
 	}
 
+	public void caminhaDiretorios(File file) {
+		File[] listFiles = file.listFiles();
+		for (File arquivo : listFiles) {
+			if (arquivo.isDirectory()) {
+				caminhaDiretorios(arquivo);
+			} else {
+				for (File arq : listFiles) {
+					this.loc += getLoc(arq);
+					this.qtdClasses += getQtdClasses(arq);
+					this.qtdMetodos += getQtdMetodos(arq);
+
+				}
+			}
+		}
+	}
+
+	public void imprime() {
+		System.out.println("LOC: " + this.loc);
+		System.out.println("CLASSES: " + this.qtdClasses);
+		System.out.println("METODOS: " + this.qtdMetodos);
+	}
 }

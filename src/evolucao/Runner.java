@@ -1,5 +1,6 @@
 package evolucao;
 
+import java.io.File;
 import java.util.Scanner;
 
 import reader.CodeReader;
@@ -12,7 +13,9 @@ public class Runner {
 		Scanner scanner = new Scanner(System.in);
 		System.out.println("Digite o LOCAL do arquivo:");
 		localPath = scanner.nextLine();
-		codeReader.run(localPath);
+		
+		File file = new File(localPath);
+		codeReader.run(file);
 		scanner.close();
 
 	}
