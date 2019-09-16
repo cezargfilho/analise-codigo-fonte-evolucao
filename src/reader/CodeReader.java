@@ -11,23 +11,14 @@ import exportador.Exportador;
 
 public class CodeReader {
 
-	private int loc;
-	private int qtdMetodos;
-	private int qtdClasses;
+//	private int loc;
+//	private int qtdMetodos;
+//	private int qtdClasses;
 
 	public void run(File diretorio) {
-		// usado para busca em múltiplos diretórios
 		caminhaDiretorios(diretorio);
 		Exportador exportador = new Exportador();
-		imprime();
-		exportador.gerarCSV(loc, qtdClasses, qtdMetodos);
-		/*
-		 * Usado para busca em um arquivo apenas 
-		 * System.out.println("LOC: " +
-		 * getLoc(diretorio)); System.out.println("METODOS: " +
-		 * getQtdMetodos(diretorio)); System.out.println("CLASSES:" +
-		 * getQtdClasses(diretorio));
-		 */
+		// exportador.gerarCSV(loc, qtdClasses, qtdMetodos);
 
 	}
 
@@ -37,6 +28,7 @@ public class CodeReader {
 		BufferedReader reader;
 		Matcher matcher;
 		String linha;
+		int qtdMetodos = 0;
 		try {
 			reader = new BufferedReader(new FileReader(arquivo.getPath()));
 			if (reader.ready()) {
@@ -58,6 +50,7 @@ public class CodeReader {
 		BufferedReader reader;
 		Matcher matcher;
 		String linha;
+		int qtdClasses = 0;
 		try {
 			reader = new BufferedReader(new FileReader(arquivo.getPath()));
 			if (reader.ready()) {
@@ -80,6 +73,7 @@ public class CodeReader {
 		BufferedReader reader;
 		String linha;
 		Matcher matcher;
+		int loc = 0;
 		try {
 			reader = new BufferedReader(new FileReader(arquivo.getPath()));
 			while ((linha = reader.readLine()) != null) {
@@ -96,24 +90,24 @@ public class CodeReader {
 	}
 
 	public void caminhaDiretorios(File file) {
+		System.err.println(file.getName());
 		File[] listFiles = file.listFiles();
 		for (File arquivo : listFiles) {
-			if (arquivo.isDirectory()) {
-				caminhaDiretorios(arquivo);
+			if (!arquivo.isDirectory()) {
+				int loc = getLoc(arquivo);
+				int classes = getQtdClasses(arquivo);
+				int metodos = getQtdMetodos(arquivo);
+				imprime(loc, classes, metodos);
 			} else {
-				for (File arq : listFiles) {
-					this.loc += getLoc(arq);
-					this.qtdClasses += getQtdClasses(arq);
-					this.qtdMetodos += getQtdMetodos(arq);
-
-				}
+				caminhaDiretorios(arquivo);
 			}
 		}
 	}
 
-	public void imprime() {
-		System.out.println("LOC: " + this.loc);
-		System.out.println("CLASSES: " + this.qtdClasses);
-		System.out.println("METODOS: " + this.qtdMetodos);
+	public void imprime(int loc, int qtdClasses, int qtdMetodos) {
+		System.out.println("LOC: " + loc);
+		System.out.println("CLASSES: " + qtdClasses);
+		System.out.println("METODOS: " + qtdMetodos);
+		System.out.println("\n");
 	}
 }
