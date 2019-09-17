@@ -79,7 +79,6 @@ public class CodeReader {
 		for (ResultadoMes resultadoMes : resultadosMeses) {
 			System.err.println(resultadoMes.getNumeroMes());
 		}
-
 	}
 
 	private void imprimie(ResultadoMes resultadoMes) {
