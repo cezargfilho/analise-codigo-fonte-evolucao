@@ -1,113 +1,102 @@
 package reader;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import exportador.Exportador;
 
+/**
+ * @author cezar-filho
+ * 
+ */
 public class CodeReader {
 
-//	private int loc;
-//	private int qtdMetodos;
-//	private int qtdClasses;
+	private String padraoClasse = "(.*class) * [A-Z].*[{]";
+	private String padraoMetodo = "(^.*(public|private|protected|.*))*(void|int|boolean|byte|double|float|char|long|short|String).*([A-z0-9a-z]*[(].*[)]*[{])";
+	private String padraoLoc = "(\\S)";
+
+	private GeradorMetricas geradorMetricas = new GeradorMetricas();
+	private ResultadoMes mes;
+	private List<ResultadoMes> resultadosMeses = new ArrayList<ResultadoMes>();
 
 	public void run(File diretorio) {
 		caminhaDiretorios(diretorio);
 		Exportador exportador = new Exportador();
 		// exportador.gerarCSV(loc, qtdClasses, qtdMetodos);
+		// imprime(resultadosMeses);
+		ordenarMeses();
 
 	}
 
-	public int getQtdMetodos(File arquivo) { // Conta os metodos do arquivo
-		Pattern pattern = Pattern.compile(
-				"(^.*(public|private|protected|.*))*(void|int|boolean|byte|double|float|char|long|short|String).*([A-z0-9a-z]*[(].*[)]*[{])");
-		BufferedReader reader;
-		Matcher matcher;
-		String linha;
-		int qtdMetodos = 0;
-		try {
-			reader = new BufferedReader(new FileReader(arquivo.getPath()));
-			if (reader.ready()) {
-				while ((linha = reader.readLine()) != null) {
-					matcher = pattern.matcher(linha);
-					if (matcher.find())
-						qtdMetodos++;
-				}
+	public static boolean verificaEhMes(File[] subDiretorios) {
+		if (subDiretorios != null) {
+			for (int i = 0; i < subDiretorios.length; i++) {
+				if (!subDiretorios[i].isFile())
+					return false;
 			}
-			reader.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return qtdMetodos;
-	}
+			return true;
 
-	public int getQtdClasses(File arquivo) { // Conta as classes do arquivo
-		Pattern pattern = Pattern.compile("(.*class) * [A-Z].*[{]");
-		BufferedReader reader;
-		Matcher matcher;
-		String linha;
-		int qtdClasses = 0;
-		try {
-			reader = new BufferedReader(new FileReader(arquivo.getPath()));
-			if (reader.ready()) {
-				while ((linha = reader.readLine()) != null) {
-					matcher = pattern.matcher(linha);
-					if (matcher.find())
-						qtdClasses++;
-				}
-			}
-			reader.close();
-			return qtdClasses;
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
-		return qtdClasses;
-	}
-
-	public int getLoc(File arquivo) {
-		Pattern pattern = Pattern.compile("(\\S)"); // regra regex LOC
-		BufferedReader reader;
-		String linha;
-		Matcher matcher;
-		int loc = 0;
-		try {
-			reader = new BufferedReader(new FileReader(arquivo.getPath()));
-			while ((linha = reader.readLine()) != null) {
-				matcher = pattern.matcher(linha);
-				if (matcher.find())
-					loc++;
-			}
-			reader.close();
-			return loc;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return loc;
+		return false;
 	}
 
 	public void caminhaDiretorios(File file) {
-		System.err.println(file.getName());
-		File[] listFiles = file.listFiles();
-		for (File arquivo : listFiles) {
-			if (!arquivo.isDirectory()) {
-				int loc = getLoc(arquivo);
-				int classes = getQtdClasses(arquivo);
-				int metodos = getQtdMetodos(arquivo);
-				imprime(loc, classes, metodos);
-			} else {
-				caminhaDiretorios(arquivo);
+		if (file.isDirectory()) {
+			System.out.println(file.getPath());
+			if (file.listFiles() != null) {
+				File[] listFiles = file.listFiles();
+				if (verificaEhMes(listFiles)) { // verifica se eh um mes
+					mes = new ResultadoMes();
+					gerarMetricas(listFiles, mes); // popula o objeto
+					String nomeMes = file.getName();
+					int numeroMes = Integer.parseInt(nomeMes);
+					System.out.println("Mes " + numeroMes + " criado");
+					mes.setNumeroMes(numeroMes);
+					resultadosMeses.add(mes);
+				}
+				for (File arquivo : listFiles) {
+					caminhaDiretorios(arquivo);
+				}
 			}
 		}
 	}
 
-	public void imprime(int loc, int qtdClasses, int qtdMetodos) {
-		System.out.println("LOC: " + loc);
-		System.out.println("CLASSES: " + qtdClasses);
-		System.out.println("METODOS: " + qtdMetodos);
-		System.out.println("\n");
+	public void gerarMetricas(File[] listFiles, ResultadoMes resultado) {
+		for (File file : listFiles) {
+			int loc = geradorMetricas.buscarMetricas(file, padraoLoc);
+			resultado.setLoc(loc);
+			int metodos = geradorMetricas.buscarMetricas(file, padraoMetodo);
+			resultado.setQtdMetodos(metodos);
+			int classes = geradorMetricas.buscarMetricas(file, padraoClasse);
+			resultado.setQtdClasses(classes);
+		}
+	}
+
+	public void ordenarMeses() {
+		Collections.sort(resultadosMeses);
+		for (ResultadoMes resultadoMes : resultadosMeses) {
+			System.err.println(resultadoMes.getNumeroMes());
+		}
+
+	}
+
+	private void imprimie(ResultadoMes resultadoMes) {
+		System.err.println(resultadoMes.getNumeroMes());
+		System.out.println(resultadoMes.getLoc());
+		System.out.println(resultadoMes.getQtdClasses());
+		System.out.println(resultadoMes.getQtdMetodos());
+
+	}
+
+	public void imprime(List<ResultadoMes> resultados) {
+		int cont = 1;
+		for (ResultadoMes resultadoMes : resultados) {
+			System.err.println(resultadoMes);
+			System.out.println("LOC: " + resultadoMes.getLoc());
+			System.out.println("CLASSES: " + resultadoMes.getQtdClasses());
+			System.out.println("METODOS: " + resultadoMes.getQtdMetodos());
+		}
 	}
 }
