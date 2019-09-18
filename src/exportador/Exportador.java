@@ -8,6 +8,10 @@ import java.util.List;
 
 import reader.ResultadoMes;
 
+/**
+ * @author cezar-filho
+ *
+ */
 public class Exportador {
 
 	public Exportador() {

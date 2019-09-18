@@ -5,9 +5,12 @@ import java.util.Scanner;
 
 import reader.CodeReader;
 
+/**
+ * @author cezar-filho
+ *
+ */
 public class Runner {
 	static String localPath;
-	
 
 	public static void main(String[] args) {
 		Scanner scanner = new Scanner(System.in);
