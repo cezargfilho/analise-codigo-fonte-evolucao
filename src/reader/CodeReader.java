@@ -16,17 +16,14 @@ public class CodeReader {
 	private String padraoClasse = "(.*class) * [A-Z].*[{]";
 	private String padraoMetodo = "(^.*(public|private|protected|.*))*(void|int|boolean|byte|double|float|char|long|short|String).*([A-z0-9a-z]*[(].*[)]*[{])";
 	private String padraoLoc = "(\\S)";
-
 	private GeradorMetricas geradorMetricas = new GeradorMetricas();
-	private ResultadoMes mes;
-	private List<ResultadoMes> resultadosMeses = new ArrayList<ResultadoMes>();
+	private List<ResultadoMes> resultadosMeses = new ArrayList<>();
 
 	public void run(File diretorio) {
 		caminhaDiretorios(diretorio);
-		Exportador exportador = new Exportador();
-		// exportador.gerarCSV(loc, qtdClasses, qtdMetodos);
-		// imprime(resultadosMeses);
 		ordenarMeses();
+		new Exportador().gerarCSV(resultadosMeses);
+		imprimir();
 
 	}
 
@@ -48,7 +45,7 @@ public class CodeReader {
 			if (file.listFiles() != null) {
 				File[] listFiles = file.listFiles();
 				if (verificaEhMes(listFiles)) { // verifica se eh um mes
-					mes = new ResultadoMes();
+					ResultadoMes mes = new ResultadoMes();
 					gerarMetricas(listFiles, mes); // popula o objeto
 					String nomeMes = file.getName();
 					int numeroMes = Integer.parseInt(nomeMes);
@@ -76,26 +73,17 @@ public class CodeReader {
 
 	public void ordenarMeses() {
 		Collections.sort(resultadosMeses);
+	}
+
+	private void imprimir() {
 		for (ResultadoMes resultadoMes : resultadosMeses) {
-			System.err.println(resultadoMes.getNumeroMes());
+			System.out.println(resultadoMes.getNumeroMes());
+			System.out.println(resultadoMes.getLoc());
+			System.out.println(resultadoMes.getQtdClasses());
+			System.out.println(resultadoMes.getQtdMetodos());
+
 		}
-	}
-
-	private void imprimie(ResultadoMes resultadoMes) {
-		System.err.println(resultadoMes.getNumeroMes());
-		System.out.println(resultadoMes.getLoc());
-		System.out.println(resultadoMes.getQtdClasses());
-		System.out.println(resultadoMes.getQtdMetodos());
 
 	}
 
-	public void imprime(List<ResultadoMes> resultados) {
-		int cont = 1;
-		for (ResultadoMes resultadoMes : resultados) {
-			System.err.println(resultadoMes);
-			System.out.println("LOC: " + resultadoMes.getLoc());
-			System.out.println("CLASSES: " + resultadoMes.getQtdClasses());
-			System.out.println("METODOS: " + resultadoMes.getQtdMetodos());
-		}
-	}
 }

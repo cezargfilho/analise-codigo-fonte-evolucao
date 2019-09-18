@@ -4,6 +4,9 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
+
+import reader.ResultadoMes;
 
 public class Exportador {
 
@@ -11,7 +14,7 @@ public class Exportador {
 		// Construtor Default
 	}
 
-	public void gerarCSV(int loc, int qtdClasses, int qtdMetodos) {
+	public void gerarCSV(List<ResultadoMes> resultadosMeses) {
 		FileWriter fileWriter;
 		BufferedWriter bufferedWriter;
 		PrintWriter printWriter;
@@ -19,11 +22,12 @@ public class Exportador {
 			fileWriter = new FileWriter("metricas-codigo.csv");
 			bufferedWriter = new BufferedWriter(fileWriter);
 			printWriter = new PrintWriter(bufferedWriter);
-
-			printWriter.println("LOC" + ";" + "QTD. CLASSES" + ";" + "QTD. METODOS");// Cabecalho do CSV
-			printWriter.println(loc + ";" + qtdClasses + ";" + qtdMetodos);
+			printWriter.println("MES" + "," + "LOC" + "," + "QTD. CLASSES" + "," + "QTD. METODOS");// Cabecalho do CSV
+			for (ResultadoMes resultadoMes : resultadosMeses) {
+				printWriter.println(resultadoMes.getNumeroMes() + "," + resultadoMes.getLoc() + ","
+						+ resultadoMes.getQtdClasses() + "," + resultadoMes.getQtdMetodos());
+			}
 			printWriter.flush();
-
 			printWriter.close();
 			bufferedWriter.close();
 			fileWriter.close();
