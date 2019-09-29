@@ -14,8 +14,10 @@ import exportador.Exportador;
 public class CodeReader {
 
 	private String padraoClasse = "(.*class) * [A-Z].*[{]";
-	private String padraoMetodo = "(^.*(public|private|protected|.*))*(void|int|boolean|byte|double|float|char|long|short|String).*([A-z0-9a-z]*[(].*[)]*[{])";
+	private String padraoMetodo = "(^.*(public|private|protected|.*))*(void|int|boolean|byte|double|float|char|long|short|String|List|Integer|Double|Long|TPFactorizedValue|MessageKeyData|Typeface|File|CharSequence|TLObject|TLRPC.PhotoSize|Bitmap).*([A-z0-9a-z]*[(].*[)]*[{])";
 	private String padraoLoc = "(\\S)";
+	private int padraoLinhasClasse = 800;
+	private int padraoLinhasMetodos = 127;
 	private GeradorMetricas geradorMetricas = new GeradorMetricas();
 	private List<ResultadoMes> resultadosMeses = new ArrayList<>();
 
@@ -24,7 +26,6 @@ public class CodeReader {
 		ordenarMeses();
 		new Exportador().gerarCSV(resultadosMeses);
 		imprimir();
-
 	}
 
 	public static boolean verificaEhMes(File[] subDiretorios) {
@@ -34,7 +35,6 @@ public class CodeReader {
 					return false;
 			}
 			return true;
-
 		}
 		return false;
 	}
@@ -68,6 +68,8 @@ public class CodeReader {
 			resultado.setQtdMetodos(metodos);
 			int classes = geradorMetricas.buscarMetricas(file, padraoClasse);
 			resultado.setQtdClasses(classes);
+			geradorMetricas.buscarDeuses(file, padraoClasse, padraoLinhasClasse);// Classe Deus
+			geradorMetricas.buscarDeuses(file, padraoMetodo, padraoLinhasMetodos);// Metodo Deus
 		}
 	}
 
@@ -81,9 +83,7 @@ public class CodeReader {
 			System.out.println(resultadoMes.getLoc());
 			System.out.println(resultadoMes.getQtdClasses());
 			System.out.println(resultadoMes.getQtdMetodos());
-
 		}
-
 	}
 
 }

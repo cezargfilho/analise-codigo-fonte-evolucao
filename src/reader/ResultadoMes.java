@@ -2,7 +2,7 @@ package reader;
 
 /**
  * @author cezar-filho
- *
+ * Metodos Get e Set NAO DEFAULT
  */
 public class ResultadoMes implements Comparable<ResultadoMes> {
 
@@ -10,6 +10,8 @@ public class ResultadoMes implements Comparable<ResultadoMes> {
 	private int loc;
 	private int qtdClasses;
 	private int qtdMetodos;
+	private int qtdClasseDeus;
+	private int qtdMetodoDeus;
 
 	@Override
 	public int compareTo(ResultadoMes outroMes) {
@@ -52,6 +54,22 @@ public class ResultadoMes implements Comparable<ResultadoMes> {
 
 	public void setQtdMetodos(int qtdMetodos) {
 		this.qtdMetodos += qtdMetodos;
+	}
+
+	public int getQtdClasseDeus() {
+		return qtdClasseDeus;
+	}
+
+	public void setQtdClasseDeus(int qtdClasseDeus) {
+		this.qtdClasseDeus += qtdClasseDeus;
+	}
+
+	public int getQtdMetodoDeus() {
+		return qtdMetodoDeus;
+	}
+
+	public void setQtdMetodoDeus(int qtdMetodoDeus) {
+		this.qtdMetodoDeus += qtdMetodoDeus;
 	}
 
 }

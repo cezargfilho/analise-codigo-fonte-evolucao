@@ -26,7 +26,7 @@ public class Exportador {
 			fileWriter = new FileWriter("metricas-codigo.csv");
 			bufferedWriter = new BufferedWriter(fileWriter);
 			printWriter = new PrintWriter(bufferedWriter);
-			printWriter.println("MES" + "," + "LOC" + "," + "QTD. CLASSES" + "," + "QTD. METODOS");// Cabecalho do CSV
+			//printWriter.println("MES" + "," + "LOC" + "," + "QTD. CLASSES" + "," + "QTD. METODOS");// Cabecalho do CSV
 			for (ResultadoMes resultadoMes : resultadosMeses) {
 				printWriter.println(resultadoMes.getNumeroMes() + "," + resultadoMes.getLoc() + ","
 						+ resultadoMes.getQtdClasses() + "," + resultadoMes.getQtdMetodos());
