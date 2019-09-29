@@ -83,28 +83,23 @@ public class GeradorMetricas {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 		return linhas.toArray();
-
 	}
 
 	private int contaChaves(String line, int padraoLinhas) {
 		qtdLinhas++;
-		if (line.isEmpty())
-			qtdLinhas--;
 
 		if (qtdLinhas > padraoLinhas) {
 			deus++;
 			qtdLinhas = 0;
 		}
 
-		if (line.contains("{"))
+		if (line.contains("{")) {
 			chaves++;
-
-		if (line.contains("}"))
+		}
+		if (line.contains("}")) {
 			chaves--;
-
+		}
 		return chaves;
 	}
-
 }

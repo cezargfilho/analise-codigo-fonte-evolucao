@@ -24,7 +24,7 @@ public class CodeReader {
 		caminhaDiretorios(diretorio);
 		ordenarMeses();
 		new Exportador().gerarCSV(resultadosMeses);
-		imprimir();
+		//imprimir();
 	}
 
 	public static boolean verificaEhMes(File[] subDiretorios) {
