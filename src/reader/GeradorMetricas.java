@@ -15,8 +15,9 @@ import java.util.regex.Pattern;
  */
 public class GeradorMetricas {
 
-	private BufferedReader reader;
-	private int qtdChaves;
+	private int qtdLinhas;
+	private int deus;
+	private int chaves;
 
 	public int buscarMetricas(File arquivo, String padrao) {
 		Pattern pattern = Pattern.compile(padrao);
@@ -24,7 +25,7 @@ public class GeradorMetricas {
 		String linha;
 		int contador = 0;
 		try {
-			reader = new BufferedReader(new FileReader(arquivo));
+			BufferedReader reader = new BufferedReader(new FileReader(arquivo));
 			if (reader.ready()) {
 				while ((linha = reader.readLine()) != null) {
 					matcher = pattern.matcher(linha);
@@ -40,58 +41,38 @@ public class GeradorMetricas {
 		return contador;
 	}
 
-	public void buscarMetodosDeus(File arquivo, String padrao) {
-
-	}
-
-	public int buscarDeuses(File file, String padrao, int padraoLinhas) { // incompleta
+	public int buscarDeuses(File arquivo, String padrao, int padraoLinhas) {
 		Pattern pattern = Pattern.compile(padrao);
 		Matcher matcher = null;
 		String linha;
 		int localizacao = 0;
-		int qtdClasseDeus = 0;
 		try {
-			reader = new BufferedReader(new FileReader(file));
+			BufferedReader reader = new BufferedReader(new FileReader(arquivo));
 			if (reader.ready()) {
-				while ((linha = reader.readLine()) != null) {
+				while ((linha = reader.readLine()) != null) {// ler arquivo
 					matcher = pattern.matcher(linha);
-					if (matcher.find()) {
-						Object[] lista = retornaLinhasAsArray(file);
-						int qtdLinhas = 0;
+					if (matcher.find()) { // achou padrao
+						Object[] lista = retornaLinhasAsArray(arquivo);// transforma em array
 						for (int i = 0; i < lista.length; i++) {
 							if (localizacao <= i) {
-								System.out.println(lista[i].toString());
-								contaChaves(lista[i].toString());
-								if (lista[i].toString().equalsIgnoreCase("") || lista[i] == null) {
-									qtdLinhas--;
-								}
-								qtdLinhas++;
-								matcher = pattern.matcher(lista[i].toString());
-								if (matcher.find()) {
-									int linhas = qtdLinhas;
-									if (linhas > padraoLinhas) {
-										System.out.println("Classe Deus");
-										System.out.println(linhas);
-										qtdClasseDeus++;
-									}
-								}
+								contaChaves(lista[i].toString(), padraoLinhas);
 							}
 						}
 					}
 					localizacao++;
 				}
 			}
+			reader.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return qtdClasseDeus;
-
+		return deus;
 	}
 
 	public Object[] retornaLinhasAsArray(File arquivo) {
 		List<String> linhas = new ArrayList<>();
 		try {
-			reader = new BufferedReader(new FileReader(arquivo));
+			BufferedReader reader = new BufferedReader(new FileReader(arquivo));
 			if (reader.ready()) {
 				String linha;
 				while ((linha = reader.readLine()) != null) {
@@ -107,13 +88,23 @@ public class GeradorMetricas {
 
 	}
 
-	private void contaChaves(String line) {
-		if (line.contains("{")) {
-			qtdChaves++;
+	private int contaChaves(String line, int padraoLinhas) {
+		qtdLinhas++;
+		if (line.isEmpty())
+			qtdLinhas--;
+
+		if (qtdLinhas > padraoLinhas) {
+			deus++;
+			qtdLinhas = 0;
 		}
-		if (line.contains("}")) {
-			qtdChaves--;
-		}
+
+		if (line.contains("{"))
+			chaves++;
+
+		if (line.contains("}"))
+			chaves--;
+
+		return chaves;
 	}
 
 }

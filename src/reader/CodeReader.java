@@ -18,7 +18,6 @@ public class CodeReader {
 	private String padraoLoc = "(\\S)";
 	private int padraoLinhasClasse = 800;
 	private int padraoLinhasMetodos = 127;
-	private GeradorMetricas geradorMetricas = new GeradorMetricas();
 	private List<ResultadoMes> resultadosMeses = new ArrayList<>();
 
 	public void run(File diretorio) {
@@ -62,14 +61,17 @@ public class CodeReader {
 
 	public void gerarMetricas(File[] listFiles, ResultadoMes resultado) {
 		for (File file : listFiles) {
-			int loc = geradorMetricas.buscarMetricas(file, padraoLoc);
+			int loc = new GeradorMetricas().buscarMetricas(file, padraoLoc);
 			resultado.setLoc(loc);
-			int metodos = geradorMetricas.buscarMetricas(file, padraoMetodo);
+			int metodos = new GeradorMetricas().buscarMetricas(file, padraoMetodo);
 			resultado.setQtdMetodos(metodos);
-			int classes = geradorMetricas.buscarMetricas(file, padraoClasse);
+			int classes = new GeradorMetricas().buscarMetricas(file, padraoClasse);
 			resultado.setQtdClasses(classes);
-			geradorMetricas.buscarDeuses(file, padraoClasse, padraoLinhasClasse);// Classe Deus
-			geradorMetricas.buscarDeuses(file, padraoMetodo, padraoLinhasMetodos);// Metodo Deus
+			int classeDeus = new GeradorMetricas().buscarDeuses(file, padraoClasse, padraoLinhasClasse);// Classes Deus
+			resultado.setQtdClasseDeus(classeDeus);
+			int metodoDeus = new GeradorMetricas().buscarDeuses(file, padraoMetodo, padraoLinhasMetodos);// Metodos Deus
+			resultado.setQtdMetodoDeus(metodoDeus);
+
 		}
 	}
 
@@ -79,10 +81,13 @@ public class CodeReader {
 
 	private void imprimir() {
 		for (ResultadoMes resultadoMes : resultadosMeses) {
-			System.out.println(resultadoMes.getNumeroMes());
-			System.out.println(resultadoMes.getLoc());
-			System.out.println(resultadoMes.getQtdClasses());
-			System.out.println(resultadoMes.getQtdMetodos());
+			System.out.println("Numero Mes: " + resultadoMes.getNumeroMes());
+			System.out.println("LOC: " + resultadoMes.getLoc());
+			System.out.println("CLASSES: " + resultadoMes.getQtdClasses());
+			System.out.println("METODOS: " + resultadoMes.getQtdMetodos());
+			System.out.println("METODO DEUS: " + resultadoMes.getQtdMetodoDeus());
+			System.out.println("CLASSE DEUS: " + resultadoMes.getQtdClasseDeus());
+			System.out.println("________________ACABOU O MES________________");
 		}
 	}
 

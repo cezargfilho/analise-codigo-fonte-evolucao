@@ -1,8 +1,7 @@
 package reader;
 
 /**
- * @author cezar-filho
- * Metodos Get e Set NAO DEFAULT
+ * @author cezar-filho Metodos Get e Set NAO DEFAULT
  */
 public class ResultadoMes implements Comparable<ResultadoMes> {
 
