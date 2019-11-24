@@ -7,11 +7,10 @@ public class ResultadoMes implements Comparable<ResultadoMes> {
 
 	private int numeroMes;
 	private int loc;
-	private int qtdClasses;
-	private int qtdMetodos;
-	private int qtdClasseDeus;
-	private int qtdMetodoDeus;
-
+	private int qtdFunction;
+	private int qtdStruct;
+	private int qtdIMPL;
+	
 	@Override
 	public int compareTo(ResultadoMes outroMes) {
 		if (this.numeroMes < outroMes.getNumeroMes()) {
@@ -39,36 +38,28 @@ public class ResultadoMes implements Comparable<ResultadoMes> {
 		this.loc += loc;
 	}
 
-	public int getQtdClasses() {
-		return qtdClasses;
+	public int getQtdFunction() {
+		return qtdFunction;
 	}
 
-	public void setQtdClasses(int qtdClasses) {
-		this.qtdClasses += qtdClasses;
+	public void setQtdFunction(int qtdFunction) {
+		this.qtdFunction += qtdFunction;
 	}
 
-	public int getQtdMetodos() {
-		return qtdMetodos;
+	public int getQtdStruct() {
+		return qtdStruct;
 	}
 
-	public void setQtdMetodos(int qtdMetodos) {
-		this.qtdMetodos += qtdMetodos;
+	public void setQtdStruct(int qtdStruct) {
+		this.qtdStruct += qtdStruct;
 	}
 
-	public int getQtdClasseDeus() {
-		return qtdClasseDeus;
+	public int getQtdIMPL() {
+		return qtdIMPL;
 	}
 
-	public void setQtdClasseDeus(int qtdClasseDeus) {
-		this.qtdClasseDeus += qtdClasseDeus;
-	}
-
-	public int getQtdMetodoDeus() {
-		return qtdMetodoDeus;
-	}
-
-	public void setQtdMetodoDeus(int qtdMetodoDeus) {
-		this.qtdMetodoDeus += qtdMetodoDeus;
+	public void setQtdIMPL(int qtdIMPL) {
+		this.qtdIMPL += qtdIMPL;
 	}
 
 }

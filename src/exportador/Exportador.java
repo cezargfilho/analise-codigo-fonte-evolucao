@@ -27,12 +27,12 @@ public class Exportador {
 			bufferedWriter = new BufferedWriter(fileWriter);
 			printWriter = new PrintWriter(bufferedWriter);
 
-			printWriter.println("MÊS" + "," + "LOC" + "," + "CLASSES" + "," + "METODOS" + "," + "CLASSE  DEUS");// Cabecalho do CSV
+			printWriter.println("MÊS" + "," + "LOC" + "," + "FUNCTON" + "," + "STRUCT" + "," + "IMPL");// Cabecalho do CSV
 
 			for (ResultadoMes resultadoMes : resultadosMeses) {
 				printWriter.println(
-						resultadoMes.getNumeroMes() + "," + resultadoMes.getLoc() + "," + resultadoMes.getQtdClasses()
-								+ "," + resultadoMes.getQtdMetodos() + "," + resultadoMes.getQtdClasseDeus());
+						resultadoMes.getNumeroMes() + "," + resultadoMes.getLoc() + "," + resultadoMes.getQtdFunction()
+								+ "," + resultadoMes.getQtdStruct() + "," + resultadoMes.getQtdIMPL());
 				// MetodoDeus com erro, não imprimido
 			}
 			System.out.println("CSV Gerado com Sucesso!");

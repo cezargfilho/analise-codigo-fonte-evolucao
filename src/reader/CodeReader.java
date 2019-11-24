@@ -12,19 +12,18 @@ import exportador.Exportador;
  * 
  */
 public class CodeReader {
-
-	private String padraoClasse = "(.*class) * [A-Z].*[{]";
-	private String padraoMetodo = "(^.*(public|private|protected|.*))*(void|int|boolean|byte|double|float|char|long|short|String|List|Integer|Double|Long|TPFactorizedValue|MessageKeyData|Typeface|File|CharSequence|TLObject|TLRPC.PhotoSize|Bitmap).*([A-z0-9a-z]*[(].*[)]*[{])";
+	
+	private String padraoFunction = "(fn).*[A-Z]*[(].*[)]";
+	private String padraoIMPL = "(impl).*[A-Z].*[{]";
+	private String padraoStruct = "(struct).*[A-Z].*[{]";
 	private String padraoLoc = "(\\S)";
-	private int padraoLinhasClasse = 800;
-	private int padraoLinhasMetodos = 127;
 	private List<ResultadoMes> resultadosMeses = new ArrayList<>();
 
 	public void run(File diretorio) {
 		caminhaDiretorios(diretorio);
 		ordenarMeses();
 		new Exportador().gerarCSV(resultadosMeses);
-		//imprimir();
+		// imprimir();
 	}
 
 	public static boolean verificaEhMes(File[] subDiretorios) {
@@ -63,14 +62,12 @@ public class CodeReader {
 		for (File file : listFiles) {
 			int loc = new GeradorMetricas().buscarMetricas(file, padraoLoc);
 			resultado.setLoc(loc);
-			int metodos = new GeradorMetricas().buscarMetricas(file, padraoMetodo);
-			resultado.setQtdMetodos(metodos);
-			int classes = new GeradorMetricas().buscarMetricas(file, padraoClasse);
-			resultado.setQtdClasses(classes);
-			int classeDeus = new GeradorMetricas().buscarDeuses(file, padraoClasse, padraoLinhasClasse);// Classes Deus
-			resultado.setQtdClasseDeus(classeDeus);
-			int metodoDeus = new GeradorMetricas().buscarDeuses(file, padraoMetodo, padraoLinhasMetodos);// Metodos Deus
-			resultado.setQtdMetodoDeus(metodoDeus);
+			int impl = new GeradorMetricas().buscarMetricas(file, padraoIMPL);
+			resultado.setQtdIMPL(impl);
+			int function = new GeradorMetricas().buscarMetricas(file, padraoFunction);
+			resultado.setQtdFunction(function);
+			int struct = new GeradorMetricas().buscarMetricas(file, padraoStruct);
+			resultado.setQtdStruct(struct);
 
 		}
 	}
@@ -83,10 +80,9 @@ public class CodeReader {
 		for (ResultadoMes resultadoMes : resultadosMeses) {
 			System.out.println("Numero Mes: " + resultadoMes.getNumeroMes());
 			System.out.println("LOC: " + resultadoMes.getLoc());
-			System.out.println("CLASSES: " + resultadoMes.getQtdClasses());
-			System.out.println("METODOS: " + resultadoMes.getQtdMetodos());
-			System.out.println("METODO DEUS: " + resultadoMes.getQtdMetodoDeus());
-			System.out.println("CLASSE DEUS: " + resultadoMes.getQtdClasseDeus());
+			System.out.println("FUNCTIONS: " + resultadoMes.getQtdFunction());
+			System.out.println("STRUTCS: " + resultadoMes.getQtdStruct());
+			System.out.println("IMPLS: " + resultadoMes.getQtdIMPL());
 			System.out.println("________________ACABOU O MES________________");
 		}
 	}
